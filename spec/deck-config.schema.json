@@ -1,0 +1,194 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/command-deck/deck-config.schema.json",
+  "title": "Command Deck configuration",
+  "description": "Shape of a Command Deck config file. Cross-reference rules (unknown keys, missing macros, cycles, grid overlap) are enforced by tools/validate_config.py.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "workspaces"],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "defaultWorkspace": { "$ref": "#/$defs/id" },
+    "workspaces": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/workspace" }
+    },
+    "macros": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/macro" }
+    }
+  },
+  "$defs": {
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9-]{0,63}$"
+    },
+    "modifier": { "enum": ["cmd", "opt", "ctrl", "shift", "fn"] },
+    "color": { "type": "string", "pattern": "^#[0-9A-Fa-f]{6}$" },
+    "icon": {
+      "type": "string",
+      "description": "sf:<SF Symbol name> or emoji:<character>",
+      "pattern": "^(sf|emoji):.{1,64}$"
+    },
+    "position": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["row", "col"],
+      "properties": {
+        "row": { "type": "integer", "minimum": 0 },
+        "col": { "type": "integer", "minimum": 0 },
+        "rowSpan": { "type": "integer", "minimum": 1, "default": 1 },
+        "colSpan": { "type": "integer", "minimum": 1, "default": 1 }
+      }
+    },
+    "action": {
+      "oneOf": [
+        { "$ref": "#/$defs/keyAction" },
+        { "$ref": "#/$defs/textAction" },
+        { "$ref": "#/$defs/mouseAction" },
+        { "$ref": "#/$defs/macroAction" },
+        { "$ref": "#/$defs/workspaceAction" },
+        { "$ref": "#/$defs/commandAction" }
+      ]
+    },
+    "keyAction": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "key"],
+      "properties": {
+        "type": { "const": "key" },
+        "key": { "type": "string", "minLength": 1, "maxLength": 24 },
+        "modifiers": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/modifier" },
+          "uniqueItems": true,
+          "maxItems": 5
+        },
+        "behavior": {
+          "description": "tap = press and release atomically; hold = key stays down while the button is touched",
+          "enum": ["tap", "hold"],
+          "default": "tap"
+        }
+      }
+    },
+    "textAction": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "text"],
+      "properties": {
+        "type": { "const": "text" },
+        "text": { "type": "string", "minLength": 1, "maxLength": 2000 }
+      }
+    },
+    "mouseAction": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "op"],
+      "properties": {
+        "type": { "const": "mouse" },
+        "op": { "enum": ["click", "move", "scroll"] },
+        "button": { "enum": ["left", "right", "middle"], "default": "left" },
+        "count": { "type": "integer", "minimum": 1, "maximum": 3, "default": 1 },
+        "dx": { "type": "integer", "minimum": -5000, "maximum": 5000 },
+        "dy": { "type": "integer", "minimum": -5000, "maximum": 5000 }
+      }
+    },
+    "macroAction": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "macroId"],
+      "properties": {
+        "type": { "const": "macro" },
+        "macroId": { "$ref": "#/$defs/id" }
+      }
+    },
+    "workspaceAction": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "workspaceId"],
+      "properties": {
+        "type": { "const": "workspace" },
+        "workspaceId": { "$ref": "#/$defs/id" }
+      }
+    },
+    "commandAction": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "kind", "value"],
+      "properties": {
+        "type": { "const": "command" },
+        "kind": { "enum": ["openApp", "openUrl", "shell", "appleScript"] },
+        "value": { "type": "string", "minLength": 1, "maxLength": 2000 }
+      }
+    },
+    "step": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["action"],
+      "properties": {
+        "action": { "$ref": "#/$defs/action" },
+        "delayAfterMs": { "type": "integer", "minimum": 0, "maximum": 60000, "default": 0 }
+      }
+    },
+    "macro": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "label", "steps"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "label": { "type": "string", "minLength": 1, "maxLength": 64 },
+        "steps": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 200,
+          "items": { "$ref": "#/$defs/step" }
+        }
+      }
+    },
+    "button": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "label", "action", "position"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "label": { "type": "string", "maxLength": 32 },
+        "icon": { "$ref": "#/$defs/icon" },
+        "color": { "$ref": "#/$defs/color" },
+        "action": { "$ref": "#/$defs/action" },
+        "position": { "$ref": "#/$defs/position" }
+      }
+    },
+    "workspace": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "name", "kind"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "name": { "type": "string", "minLength": 1, "maxLength": 32 },
+        "kind": { "enum": ["deck", "keyboard", "mouse"] },
+        "appBundleId": {
+          "description": "Optional: switch to this workspace when this macOS application is frontmost (Stage 4).",
+          "type": "string",
+          "maxLength": 200
+        },
+        "grid": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["rows", "cols"],
+          "properties": {
+            "rows": { "type": "integer", "minimum": 1, "maximum": 12 },
+            "cols": { "type": "integer", "minimum": 1, "maximum": 8 }
+          }
+        },
+        "buttons": {
+          "type": "array",
+          "maxItems": 96,
+          "items": { "$ref": "#/$defs/button" }
+        }
+      },
+      "if": { "properties": { "kind": { "const": "deck" } } },
+      "then": { "required": ["grid"] }
+    }
+  }
+}
