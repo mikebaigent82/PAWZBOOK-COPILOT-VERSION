@@ -1,0 +1,59 @@
+@import "tailwindcss";
+
+@theme {
+  --color-paper: #f6f5f0;
+  --color-card: #ffffff;
+  --color-ink: #1c2925;
+  --color-muted: #55635e;
+  --color-line: #dcded6;
+  --color-brand: #1b6b58;
+  --color-brand-dark: #134d40;
+  --color-brand-soft: #e3f0eb;
+  --color-good: #1b7a4b;
+  --color-good-soft: #e2f3e8;
+  --color-warn: #8a5800;
+  --color-warn-soft: #fbefd5;
+  --color-bad: #b3372c;
+  --color-bad-soft: #fbe6e3;
+  --color-info-soft: #e8eef7;
+  --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+html {
+  font-size: 17px; /* slightly larger than usual for comfortable reading */
+}
+
+body {
+  background: var(--color-paper);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  line-height: 1.55;
+}
+
+:focus-visible {
+  outline: 3px solid #f0b429;
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+@media print {
+  .no-print {
+    display: none !important;
+  }
+  body {
+    background: #fff;
+  }
+}

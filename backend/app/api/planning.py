@@ -385,15 +385,38 @@ def compare_scenarios(body: CompareIn, ctx: Ctx = Depends(get_ctx)):
         proj = runs.projection(ctx, scenario_id=sid)
         mc = runs.monte_carlo(ctx, n_paths=body.n_paths, seed=body.seed, scenario_id=sid)
         name = "Current plan" if sid is None else ctx.owned(Scenario, sid).name
-        columns.append({
-            "scenario_id": sid, "name": name, "is_baseline": sid is None,
-            "summary": proj["summary"], "success_probability": mc["success_probability"],
-            "ending_portfolio_real": mc["ending_portfolio_real"],
-            "years": proj["years"],
-            "portfolio_real": [round(r["portfolio"] / r["price_index"], 2) for r in proj["rows"]],
-            "spending_real": [round(r["spending_total"] / r["price_index"], 2) for r in proj["rows"]],
-            "input_hash": proj["meta"]["plan_hash"],
-        })
+        columns.append(_column(name, proj, mc, sid))
     return {"columns": columns, "seed": body.seed, "n_paths": body.n_paths,
             "note": "All columns use the same simulated futures (same seed), so differences come only from "
                     "the changes in each scenario."}
+
+
+class PreviewIn(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    overrides: ScenarioOverrides
+    n_paths: int = Field(1000, ge=100, le=5000)
+    seed: int = DEFAULT_SEED
+
+
+def _column(name: str, proj: dict, mc: dict, sid: str | None = None) -> dict:
+    return {
+        "scenario_id": sid, "name": name, "is_baseline": sid is None and name == "Current plan",
+        "summary": proj["summary"], "success_probability": mc["success_probability"],
+        "ending_portfolio_real": mc["ending_portfolio_real"], "years": proj["years"],
+        "portfolio_real": [round(r["portfolio"] / r["price_index"], 2) for r in proj["rows"]],
+        "spending_real": [round(r["spending_total"] / r["price_index"], 2) for r in proj["rows"]],
+        "input_hash": proj["meta"]["plan_hash"],
+    }
+
+
+@router.post("/scenarios/preview")
+def preview_scenario(body: PreviewIn, ctx: Ctx = Depends(get_ctx)):
+    """Try changes without saving anything; compared with the current plan on the same futures."""
+    base_p = runs.projection(ctx)
+    base_m = runs.monte_carlo(ctx, n_paths=body.n_paths, seed=body.seed)
+    alt_p = runs.projection(ctx, overrides=body.overrides, store=False)
+    alt_m = runs.monte_carlo(ctx, n_paths=body.n_paths, seed=body.seed, overrides=body.overrides, store=False)
+    return {"columns": [_column("Current plan", base_p, base_m), _column("With your changes", alt_p, alt_m, None)],
+            "seed": body.seed, "n_paths": body.n_paths, "warnings": alt_p.get("warnings", []),
+            "note": "Both use the same simulated futures (same seed), so the difference comes only from your changes. "
+                    "Nothing has been saved."}

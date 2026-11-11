@@ -506,3 +506,15 @@ class TestLiveAssistant:
         live.post("/assistant/consent", {"consent": True})
         r = live.post("/assistant/chat", {"message": "Am I on track?"}).json()
         assert r["mode"] == "demo" and "built-in helper answered" in r["notice"]
+
+
+def test_scenario_preview_saves_nothing(sample):
+    members = sample.get("/members").json()
+    before = sample.get("/scenarios").json()["scenarios"]
+    r = sample.post("/scenarios/preview", {"overrides": {"expense_scale": 0.8,
+                                                         "ss_claim_age": {members[0]["id"]: 70}}, "n_paths": 300})
+    assert r.status_code == 200, r.text
+    cur, alt = r.json()["columns"]
+    assert cur["is_baseline"] and not alt["is_baseline"]
+    assert alt["success_probability"] >= cur["success_probability"]
+    assert sample.get("/scenarios").json()["scenarios"] == before
