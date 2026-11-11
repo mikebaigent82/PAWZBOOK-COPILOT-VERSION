@@ -1,0 +1,8 @@
+{
+  "version": "2026.1",
+  "model": "simplified_effective_rate",
+  "note": "State income tax is modelled as ONE effective rate chosen by the user, applied to federal AGI less optional exclusions. Only the no-income-tax list below is built in; every other state uses the user's rate (default_effective_rate until changed). This is a documented simplification, not a state bracket engine.",
+  "default_effective_rate": 0.04,
+  "no_wage_income_tax_states": ["AK", "FL", "NV", "NH", "SD", "TN", "TX", "WA", "WY"],
+  "states": ["AL","AK","AZ","AR","CA","CO","CT","DE","DC","FL","GA","HI","ID","IL","IN","IA","KS","KY","LA","ME","MD","MA","MI","MN","MS","MO","MT","NE","NV","NH","NJ","NM","NY","NC","ND","OH","OK","OR","PA","RI","SC","SD","TN","TX","UT","VT","VA","WA","WV","WI","WY"]
+}

@@ -1,0 +1,52 @@
+{
+  "note": "HISTORICAL annual total returns (percent), rounded to one decimal. These are records of the past used only for stress tests; they are never a forecast. Figures follow widely published annual series (S&P 500 total return, 10-year US Treasury total return, 3-month T-bill, CPI-U Dec-Dec) and may differ slightly between publishers. Users can add their own custom scenarios.",
+  "as_of": "2026-11-11",
+  "scenarios": [
+    {
+      "key": "great_depression_1929",
+      "name": "Great Depression (1929-1932)",
+      "plain": "The worst stock market crash in US history, with falling prices (deflation).",
+      "years": [
+        {"year": 1929, "equity": -8.4, "bond": 4.2, "cash": 3.2, "inflation": 0.6},
+        {"year": 1930, "equity": -24.9, "bond": 4.5, "cash": 4.6, "inflation": -6.4},
+        {"year": 1931, "equity": -43.3, "bond": -2.6, "cash": 2.3, "inflation": -9.3},
+        {"year": 1932, "equity": -8.2, "bond": 8.8, "cash": 1.1, "inflation": -10.3}
+      ]
+    },
+    {
+      "key": "stagflation_1973",
+      "name": "1970s stagflation (1973-1974)",
+      "plain": "Stocks fell sharply while prices rose very fast.",
+      "years": [
+        {"year": 1973, "equity": -14.7, "bond": 3.7, "cash": 7.3, "inflation": 8.7},
+        {"year": 1974, "equity": -26.5, "bond": 2.0, "cash": 8.0, "inflation": 12.3}
+      ]
+    },
+    {
+      "key": "dotcom_2000",
+      "name": "Dot-com bust (2000-2002)",
+      "plain": "Three losing years in a row for stocks; bonds did well.",
+      "years": [
+        {"year": 2000, "equity": -9.1, "bond": 16.7, "cash": 5.8, "inflation": 3.4},
+        {"year": 2001, "equity": -11.9, "bond": 5.6, "cash": 3.7, "inflation": 1.6},
+        {"year": 2002, "equity": -22.1, "bond": 15.1, "cash": 1.7, "inflation": 2.4}
+      ]
+    },
+    {
+      "key": "financial_crisis_2008",
+      "name": "Global financial crisis (2008)",
+      "plain": "Stocks lost more than a third of their value in one year.",
+      "years": [
+        {"year": 2008, "equity": -37.0, "bond": 20.1, "cash": 1.4, "inflation": 0.1}
+      ]
+    },
+    {
+      "key": "inflation_shock_2022",
+      "name": "Inflation shock (2022)",
+      "plain": "Stocks and bonds both fell in the same year while prices jumped.",
+      "years": [
+        {"year": 2022, "equity": -18.1, "bond": -17.8, "cash": 2.0, "inflation": 6.5}
+      ]
+    }
+  ]
+}

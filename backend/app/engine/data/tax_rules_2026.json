@@ -1,0 +1,51 @@
+{
+  "tax_year": 2026,
+  "version": "2026.1",
+  "description": "US federal rules for tax year 2026, including One Big Beautiful Bill Act (OBBBA) amendments.",
+  "sources": [
+    "IRS Rev. Proc. 2025-32 (2026 inflation adjustments)",
+    "Public Law 119-21 (OBBBA): senior deduction for 2025-2028",
+    "IRC 86 (Social Security benefit taxation), IRC 1411 (NIIT), IRC 3101 (FICA)",
+    "SSA 2026 contribution and benefit base ($184,500); CMS 2026 Medicare Part B/D premiums and IRMAA"
+  ],
+  "federal": {
+    "brackets": {
+      "single": [[0, 0.10], [12400, 0.12], [50400, 0.22], [105700, 0.24], [201775, 0.32], [256225, 0.35], [640600, 0.37]],
+      "mfj": [[0, 0.10], [24800, 0.12], [100800, 0.22], [211400, 0.24], [403550, 0.32], [512450, 0.35], [768700, 0.37]]
+    },
+    "standard_deduction": {"single": 16100, "mfj": 32200},
+    "additional_std_deduction_65": {"single": 2050, "mfj": 1650},
+    "senior_deduction": {
+      "amount_per_person": 6000,
+      "phaseout_start": {"single": 75000, "mfj": 150000},
+      "phaseout_rate": 0.06,
+      "first_year": 2025,
+      "last_year": 2028
+    },
+    "ltcg_thresholds": {"single": [49450, 545500], "mfj": [98900, 613700]},
+    "ltcg_rates": [0.0, 0.15, 0.20],
+    "niit": {"rate": 0.038, "threshold": {"single": 200000, "mfj": 250000}},
+    "ss_taxation": {
+      "base1": {"single": 25000, "mfj": 32000},
+      "base2": {"single": 34000, "mfj": 44000}
+    },
+    "early_withdrawal_penalty_rate": 0.10,
+    "home_sale_exclusion": {"single": 250000, "mfj": 500000}
+  },
+  "payroll": {
+    "ss_rate": 0.062,
+    "ss_wage_base": 184500,
+    "medicare_rate": 0.0145,
+    "additional_medicare_rate": 0.009,
+    "additional_medicare_threshold": {"single": 200000, "mfj": 250000}
+  },
+  "medicare": {
+    "eligibility_age": 65,
+    "part_b_standard_monthly": 202.90,
+    "irmaa_top_tier_indexed_from_year": 2028,
+    "irmaa": {
+      "single": [[109000, 81.20, 14.50], [137000, 202.90, 37.50], [171000, 324.60, 60.40], [205000, 446.30, 83.30], [500000, 487.00, 91.00]],
+      "mfj": [[218000, 81.20, 14.50], [274000, 202.90, 37.50], [342000, 324.60, 60.40], [410000, 446.30, 83.30], [750000, 487.00, 91.00]]
+    }
+  }
+}
