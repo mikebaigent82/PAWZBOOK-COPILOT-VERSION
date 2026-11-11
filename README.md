@@ -1,5 +1,7 @@
 # Tallgrass Planner
 
+![Home page with sample data](docs/screenshot-home.png)
+
 A private retirement and wealth planner. It answers one question in plain English, **"Am I on track?"**, and lets you explore what would change the answer.
 
 - Enter your savings, income and spending by hand (or import a spreadsheet file). No bank connection is needed.
