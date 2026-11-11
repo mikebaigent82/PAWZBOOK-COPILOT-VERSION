@@ -1,7 +1,7 @@
 [project]
-name = "clearpath-planner-backend"
+name = "tallgrass-planner-backend"
 version = "1.0.0"
-description = "Calculation engine and API for the ClearPath personal wealth and retirement planner"
+description = "Calculation engine and API for the Tallgrass personal wealth and retirement planner"
 requires-python = ">=3.11"
 dependencies = [
     "fastapi>=0.115",
@@ -21,6 +21,7 @@ dependencies = [
     "reportlab>=4.2",
     "openpyxl>=3.1",
     "python-multipart>=0.0.9",
+    "email-validator>=2.1",
 ]
 
 [project.optional-dependencies]
@@ -34,9 +35,13 @@ testpaths = ["tests"]
 pythonpath = ["."]
 
 [tool.ruff]
-line-length = 120
+line-length = 136
 target-version = "py311"
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "B", "UP"]
-ignore = ["B008", "E731"]
+ignore = ["B008", "B905", "E731"]
+
+[tool.ruff.lint.per-file-ignores]
+# Closures in the year loop are called within the same iteration.
+"app/engine/simulate.py" = ["B023"]
