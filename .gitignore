@@ -19,3 +19,6 @@ backups/
 .DS_Store
 .idea/
 .vscode/
+*.tsbuildinfo
+deploy/*.env
+!deploy/*.env.example
